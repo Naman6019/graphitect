@@ -430,6 +430,26 @@ def _embed_hover_details(viewer_html: str, details: dict[str, dict[str, str]] | 
     return viewer_html + marker
 
 
+def _present_embedded_viewer(viewer_html: str) -> str:
+    """Start a complete Archify viewer in its responsive presentation stage.
+
+    The report still embeds the original viewer HTML in ``iframe.srcdoc``.
+    Presentation Stage only gives that live viewer the iframe's viewport; its
+    pan/zoom, theme, route, story, and export controls remain its own runtime.
+    """
+
+    def replace_html_tag(match: re.Match[str]) -> str:
+        attrs = re.sub(
+            r'\sdata-present(?=\s|=|$)(?:\s*=\s*(?:"[^"]*"|\'[^\']*\'|[^\s>]+))?',
+            "",
+            match.group(1),
+            flags=re.IGNORECASE,
+        )
+        return f'<html{attrs} data-present="true">'
+
+    return re.sub(r"<html\b([^>]*)>", replace_html_tag, viewer_html, count=1, flags=re.IGNORECASE)
+
+
 def _esc(text: str) -> str:
     return html_lib.escape(text, quote=True)
 
@@ -663,9 +683,9 @@ def to_html(
     """Render one HTML report containing the complete Archify viewer.
 
     ``diagram_svg`` keeps its old public name for compatibility, but now
-    accepts the complete Archify HTML artifact. ``iframe.srcdoc`` preserves
-    its themes, navigation, route tools, guided views, and exports without a
-    second output file.
+    accepts the complete Archify HTML artifact. ``iframe.srcdoc`` starts its
+    responsive presentation stage while preserving themes, navigation, route
+    tools, guided views, and exports without a second output file.
     """
     visible_doc = understanding.doc if explanation_available else []
     nav_items = [("Diagram", "interactive-diagram"), ("Explanation", "project-explanation")]
@@ -696,7 +716,7 @@ def to_html(
         )
 
     if diagram_svg:
-        viewer_srcdoc = html_lib.escape(diagram_svg, quote=True)
+        viewer_srcdoc = html_lib.escape(_present_embedded_viewer(diagram_svg), quote=True)
         printable_svg, printable_styles = _extract_diagram_assets(diagram_svg)
         print_diagram_block = (
             '<div class="print-diagram-wrap">'
@@ -750,7 +770,9 @@ def to_html(
             controls = []
             panels = []
             if sequence_diagram_svg:
-                sequence_viewer_srcdoc = html_lib.escape(sequence_diagram_svg, quote=True)
+                sequence_viewer_srcdoc = html_lib.escape(
+                    _present_embedded_viewer(sequence_diagram_svg), quote=True
+                )
                 controls.append(mode_button("sequence", sequence_label))
                 panels.append(
                     mode_panel(
@@ -762,7 +784,10 @@ def to_html(
                 )
             if story_diagram_svg:
                 story_viewer_srcdoc = html_lib.escape(
-                    _embed_hover_details(story_diagram_svg, story_hover_details), quote=True
+                    _present_embedded_viewer(
+                        _embed_hover_details(story_diagram_svg, story_hover_details)
+                    ),
+                    quote=True,
                 )
                 controls.append(mode_button("story", story_label))
                 panels.append(
@@ -783,7 +808,9 @@ def to_html(
                 )
             )
             if full_diagram_svg:
-                full_viewer_srcdoc = html_lib.escape(full_diagram_svg, quote=True)
+                full_viewer_srcdoc = html_lib.escape(
+                    _present_embedded_viewer(full_diagram_svg), quote=True
+                )
                 controls.append(mode_button("full", full_label))
                 full_hidden = " hidden" if active_mode != "full" else ""
                 panels.append(

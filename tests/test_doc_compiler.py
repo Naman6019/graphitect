@@ -187,11 +187,16 @@ def test_to_html_without_diagram_shows_placeholder_not_empty_frame():
 
 
 def test_to_html_with_diagram_embeds_the_complete_viewer_in_srcdoc():
-    viewer = '<html><script>window.viewerReady=true</script><svg id="test-diagram"></svg></html>'
+    viewer = (
+        '<html lang="en"><script>window.viewerReady=true</script>'
+        '<button id="btn-present">Present</button><svg id="test-diagram"></svg></html>'
+    )
     out = to_html(_understanding(), "Test", diagram_svg=viewer)
     assert 'id="graphitect-diagram-frame"' in out
     assert "window.viewerReady=true" in out
-    assert "&lt;html&gt;" in out
+    assert "&lt;html lang=&quot;en&quot;" in out
+    assert 'data-present=&quot;true&quot;' in out
+    assert 'id=&quot;btn-present&quot;' in out  # Archify controls remain live inside srcdoc.
 
 
 def test_to_html_with_two_diagrams_adds_overview_and_scrollable_full_graph_modes():
@@ -237,6 +242,7 @@ def test_to_html_with_story_adds_guided_default_and_presentation_controls():
     assert "runStory({present:true, play:false})" in out
     assert "query.get('present') === '1'" in out
     assert "width:min(2400px,calc(100vw - clamp(24px,6vw,160px)))" in out
+    assert out.count('data-present=&quot;true&quot;') == 3
 
 
 def test_to_html_adds_escaped_per_block_hover_details_to_the_embedded_story_only():
