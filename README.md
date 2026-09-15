@@ -95,22 +95,56 @@ Supported environment variables are `GEMINI_API_KEY` (or `GOOGLE_API_KEY`),
 `ANTHROPIC_API_KEY`, and `OLLAMA_API_KEY`. A local Ollama server is also
 supported through `--ollama-local`.
 
-### Installed agent skill — no separate API key
+## Install as an agent skill — no separate API key
 
-When the Graphitect skill runs inside Codex, Claude Code, or another compatible
-agent host, the host's selected model writes Section 2. Graphitect itself makes
-no LLM network call in this path.
+Install the `graphitect` CLI once, then export a **project skill** inside each
+repository you want an agent to explain. The agent host's selected model writes
+Section 2; Graphitect makes no LLM network call in this path.
+
+### Codex
 
 ```bash
-# Run from the repository you want the agent to understand.
-graphitect skill export --host codex
+# One time, if Graphitect is not installed already.
+python -m pip install graphitect
 
-# Or install the Claude Code variant.
-graphitect skill export --host claude-code
+# In the project you want to document.
+cd /path/to/project
+graphitect skill export --host codex
+# Writes .agents/skills/graphitect/SKILL.md
 ```
 
-Then ask the host agent to use Graphitect for the repository. The skill runs
-this evidence-first handoff:
+Open that project in Codex, then say: `Use the Graphitect skill to explain this
+codebase and write project-architecture.html.`
+
+### Claude Code
+
+```bash
+# One time, if Graphitect is not installed already.
+python -m pip install graphitect
+
+# In the project you want to document.
+cd /path/to/project
+graphitect skill export --host claude-code
+# Writes .claude/skills/graphitect/SKILL.md
+```
+
+Start or reopen Claude Code in that project, then say: `Use the Graphitect
+skill to explain this codebase and write project-architecture.html.`
+
+### Other Agent Skills-compatible hosts
+
+Export the portable bundle to the host's project-skill directory. Point
+`--output` at the directory that host discovers:
+
+```bash
+cd /path/to/project
+graphitect skill export --output ./skills/graphitect
+# Writes SKILL.md and agents/openai.yaml.
+```
+
+### What the skill does
+
+The agent follows this evidence-first handoff:
 
 ```bash
 graphitect agent prepare /path/to/project -o .graphitect-agent
@@ -123,13 +157,6 @@ narrative; it cannot add, remove, or rename Graphify nodes and edges. A
 confirmed code claim must cite a repository-relative file and a full phrase
 from that file. Unverified, uncited, externally referenced, or fabricated
 user-backed claims are downgraded to **inferred**.
-
-For another Agent Skills-compatible host, export the portable bundle to its
-skill location:
-
-```bash
-graphitect skill export --output ./skills/graphitect
-```
 
 ## What the report contains
 
