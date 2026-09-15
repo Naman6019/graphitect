@@ -1,0 +1,4 @@
+recursive-include graphitect/_vendor/archify *
+recursive-include graphify *.md
+recursive-include licenses *
+

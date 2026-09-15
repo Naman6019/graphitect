@@ -1,0 +1,4 @@
+interface:
+  display_name: "Graphitect"
+  short_description: "Generate a grounded interactive codebase architecture report"
+  default_prompt: "Use Graphitect to create an evidence-grounded, self-contained architecture report for this repository."
