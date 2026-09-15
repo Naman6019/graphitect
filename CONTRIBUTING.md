@@ -17,7 +17,7 @@ node --version
 ## Before opening a pull request
 
 ```bash
-python -m ruff check graphitect tests
+python -m ruff check graphitect
 python -m pytest
 node graphitect/_vendor/archify/bin/archify.mjs --help
 ```
