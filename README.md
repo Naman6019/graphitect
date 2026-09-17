@@ -9,12 +9,10 @@ technical interviews, handoffs, and architectural review. It has two sections:
 2. **Project explanation** — technical choices, mechanisms, trade-offs, and
    pros/cons, with every statement marked confirmed or inferred.
 
-![Graphitect interactive architecture overview](docs/images/architecture-overview-demo.png)
+![Graphitect report with a responsive embedded interactive viewer](docs/images/embedded-viewer-demo.png)
 
-*A real Graphitect architecture overview generated from FundersAI. The embedded viewer supports
-pan, zoom, route controls, hover details, dark mode, presentation mode, a
-full relationship rollup, and an evidence-gated static call sequence when the
-source graph contains a direct call chain.*
+*A live Graphitect report with a responsive embedded Archify viewer. Theme,
+view, presentation, and export controls remain interactive inside the report.*
 
 ## Why Graphitect
 
