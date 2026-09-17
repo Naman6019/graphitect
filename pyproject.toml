@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "graphitect"
-version = "0.2.0"
+version = "0.2.1"
 description = "One self-contained codebase explainer: bundled Graphify analysis, bundled Archify diagrams, and optional LLM rationale."
 readme = "README.md"
 license = "MIT"
@@ -54,6 +54,8 @@ dependencies = [
 [project.urls]
 Homepage = "https://github.com/Naman6019/graphitect"
 Repository = "https://github.com/Naman6019/graphitect"
+Graphify = "https://github.com/Graphify-Labs/graphify"
+Archify = "https://github.com/tt-a1i/archify"
 
 [project.scripts]
 graphitect = "graphitect.__main__:main"

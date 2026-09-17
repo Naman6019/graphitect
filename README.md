@@ -22,8 +22,8 @@ letting a model invent the diagram:
 
 | Layer | What it does |
 | --- | --- |
-| **Graphify** | Extracts code structure, direct relationships, and communities locally. It is the deterministic source for diagram nodes and edges. |
-| **Archify** | Renders the bundled, interactive architecture, workflow, and sequence views. |
+| [**Graphify**](https://github.com/Graphify-Labs/graphify) | Extracts code structure, direct relationships, and communities locally. It is the deterministic source for diagram nodes and edges. |
+| [**Archify**](https://github.com/tt-a1i/archify) | Renders the bundled, interactive architecture, workflow, and sequence views. |
 | **Graphitect** | Turns that evidence into one portable HTML report and verifies any file-backed explanation citation before publishing it. |
 
 The diagram does not require an LLM or API key. The explanation can come from
@@ -35,8 +35,9 @@ Claude Code, or another Agent Skills-compatible host.
 - Python 3.10+
 - Node.js 18+ for the bundled Archify renderer
 
-Graphify and Archify are bundled with Graphitect. You do **not** install
-Graphify separately or run `npm install` for Archify.
+[Graphify](https://github.com/Graphify-Labs/graphify) and
+[Archify](https://github.com/tt-a1i/archify) are bundled with Graphitect. You
+do **not** install Graphify separately or run `npm install` for Archify.
 
 ## Install
 
@@ -227,6 +228,8 @@ external model.
 
 ## Bundled projects and notices
 
-Graphitect bundles Graphify under its Apache-2.0 distribution terms and
-Archify under MIT plus its third-party notices. See `licenses/graphify/`,
-`licenses/archify/`, and the root notice files for details.
+Graphitect bundles [Graphify](https://github.com/Graphify-Labs/graphify) under
+its Apache-2.0 distribution terms and
+[Archify](https://github.com/tt-a1i/archify) under MIT plus its third-party
+notices. See `licenses/graphify/`, `licenses/archify/`, and the root notice
+files for details.
