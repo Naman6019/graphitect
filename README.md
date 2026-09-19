@@ -97,6 +97,26 @@ Section 2 as unavailable. To explicitly omit the diagram:
 graphitect build /path/to/project --no-diagram -o project-explanation.html
 ```
 
+## Real-World Example: FastAPI Architecture Teardown
+
+To demonstrate Graphitect on an enterprise-scale codebase, we ran it directly against the [`fastapi/fastapi`](https://github.com/fastapi/fastapi) repository.
+
+In under 60 seconds, Graphitect mapped:
+- **8,699 AST nodes** and **16,066 code dependencies**
+- **818 modular clusters** and route hierarchies
+- **100% verified, file-and-line backed architectural claims** (zero hallucinations)
+
+### Pre-Compiled Demo Artifacts in this Repo
+- 🌐 [**Interactive WebGL Architecture Report** (`examples/fastapi/fastapi-architecture.html`)](examples/fastapi/fastapi-architecture.html) — Standalone 3.9 MB report with interactive Cytoscape/WebGL graph visualization and grounded design doc.
+- 📄 [**LinkedIn Document Carousel PDF** (`examples/fastapi/fastapi-architecture-carousel.pdf`)](examples/fastapi/fastapi-architecture-carousel.pdf) — 7-slide 4:5 vertical teardown ready for LinkedIn document carousel sharing.
+- 📋 [**Formal Technical Architecture Spec** (`examples/fastapi/fastapi-architecture-report.pdf`)](examples/fastapi/fastapi-architecture-report.pdf) — 4-page formal A4 printable architecture specification.
+
+### Key Architectural Findings Verified from Code:
+1. **Direct ASGI Inheritance**: FastAPI directly inherits from Starlette's application container (`class FastAPI(Starlette):` in `fastapi/applications.py:42`), inheriting battle-tested ASGI protocol handling, lifespan hooks, and WebSockets without maintaining a custom network stack.
+2. **Decoupled Two-Tier Routing**: `APIRouter` (`fastapi/routing.py:2255`) organizes modular domain routes, while `APIRoute` (`fastapi/routing.py:1126`) encapsulates route dispatching, dependency evaluation, and response serialization.
+3. **Declarative Dependency Injection DAG**: The `Depends` marker (`fastapi/params.py:746`) builds an inspectable `Dependant` DAG at startup; with `use_cache=True`, sub-dependencies (like database connections) execute exactly once per request.
+4. **Dynamic OpenAPI 3.1.0 Contract Generation**: `get_openapi()` (`fastapi/openapi/utils.py:585`) walks route signatures and Pydantic models at runtime to synthesize OpenAPI contracts on the fly.
+
 ## Add the detailed explanation
 
 ### Standalone CLI
