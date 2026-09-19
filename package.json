@@ -1,0 +1,18 @@
+{
+  "name": "graphitect",
+  "version": "0.2.1",
+  "description": "Graphitect: Grounded codebase architecture diagrams and project explanations",
+  "type": "module",
+  "bin": {
+    "graphitect": "./bin/graphitect.mjs"
+  },
+  "files": [
+    "bin",
+    "graphitect/skill"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Naman6019/graphitect.git"
+  }
+}

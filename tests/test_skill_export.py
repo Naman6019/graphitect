@@ -51,3 +51,17 @@ def test_skill_export_refuses_to_overwrite_without_force(tmp_path: Path):
     args = build_parser().parse_args(["skill", "export", "--output", str(destination)])
 
     assert args.func(args) == 2
+
+
+def test_skill_export_global_flag(tmp_path: Path, monkeypatch):
+    monkeypatch.setattr(Path, "home", lambda: tmp_path)
+    parser = build_parser()
+
+    claude_args = parser.parse_args(["skill", "export", "--host", "claude-code", "--global"])
+    assert claude_args.func(claude_args) == 0
+    assert (tmp_path / ".claude" / "skills" / "graphitect" / "SKILL.md").is_file()
+
+    codex_args = parser.parse_args(["skill", "export", "--host", "codex", "--global"])
+    assert codex_args.func(codex_args) == 0
+    assert (tmp_path / ".agents" / "skills" / "graphitect" / "SKILL.md").is_file()
+

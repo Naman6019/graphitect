@@ -41,25 +41,44 @@ do **not** install Graphify separately or run `npm install` for Archify.
 
 ## Install
 
-### From this repository
+Only **Graphitect** needs to be installed. [Graphify](https://github.com/Graphify-Labs/graphify) and [Archify](https://github.com/tt-a1i/archify) are internal engines bundled directly inside Graphitect — do **not** install Graphify or Archify separately. You do **not** need to clone this repository.
 
-```bash
-git clone https://github.com/Naman6019/graphitect.git
-cd graphitect
-python -m pip install .
-```
+Choose one of the **3 ways to install / run Graphitect**:
 
-### From PyPI
-
+### 1. Python / PyPI CLI (Standard install)
+Install the `graphitect` CLI directly from PyPI into your environment:
 ```bash
 python -m pip install graphitect
+# or with uv:
+uv tool install graphitect
+# or with pipx:
+pipx install graphitect
 ```
 
-Confirm that the renderer runtime is available:
-
+Confirm that the CLI and renderer runtime are available:
 ```bash
-node --version
 graphitect --help
+node --version
+```
+
+### 2. On-Demand Runner (`uvx` or `npx` — Zero-clone, zero-install)
+Run Graphitect immediately without installing anything permanently:
+```bash
+# Python on-demand runner (runs directly from PyPI):
+uvx graphitect --help
+
+# Node / npx runner:
+npx graphitect --help
+```
+
+### 3. Direct Download (curl or PowerShell — Single command)
+Download or export the portable assets directly without cloning the git repo:
+```bash
+# macOS / Linux:
+curl -fsSL https://raw.githubusercontent.com/Naman6019/graphitect/main/graphitect/skill/SKILL.md -o SKILL.md
+
+# Windows PowerShell:
+Invoke-WebRequest -Uri https://raw.githubusercontent.com/Naman6019/graphitect/main/graphitect/skill/SKILL.md -OutFile SKILL.md
 ```
 
 ## Quick start
@@ -96,47 +115,65 @@ supported through `--ollama-local`.
 
 ## Install as an agent skill — no separate API key
 
-Install the `graphitect` CLI once, then export a **project skill** inside each
-repository you want an agent to explain. The agent host's selected model writes
-Section 2; Graphitect makes no LLM network call in this path.
+You do not need to clone this repository to use the skill. The agent host's
+selected model writes Section 2; Graphitect makes no LLM network call in this
+path.
 
-### Codex
+### Option 1: Instant export with `uvx` (Recommended — zero clone, zero install)
 
-```bash
-# One time, if Graphitect is not installed already.
-python -m pip install graphitect
-
-# In the project you want to document.
-cd /path/to/project
-graphitect skill export --host codex
-# Writes .agents/skills/graphitect/SKILL.md
-```
-
-Open that project in Codex, then say: `Use the Graphitect skill to explain this
-codebase and write project-architecture.html.`
-
-### Claude Code
+Run directly in any project terminal without cloning the repository or creating a virtual environment:
 
 ```bash
-# One time, if Graphitect is not installed already.
-python -m pip install graphitect
+# Project-level skill (in the project you want to document):
+uvx graphitect skill export --host claude-code   # Writes .claude/skills/graphitect/
+uvx graphitect skill export --host codex         # Writes .agents/skills/graphitect/
 
-# In the project you want to document.
-cd /path/to/project
-graphitect skill export --host claude-code
-# Writes .claude/skills/graphitect/SKILL.md
+# Or install globally across all projects on your machine:
+uvx graphitect skill export --host claude-code --global   # Writes ~/.claude/skills/graphitect/
+uvx graphitect skill export --host codex --global         # Writes ~/.agents/skills/graphitect/
 ```
 
-Start or reopen Claude Code in that project, then say: `Use the Graphitect
-skill to explain this codebase and write project-architecture.html.`
+*(You can also use `pipx run graphitect skill export ...`)*
+
+### Option 2: Using `npx` (Zero-clone)
+
+Fetch the skill bundle without cloning using Node/npm tooling:
+
+```bash
+# Using degit to pull just the skill bundle:
+npx degit Naman6019/graphitect/graphitect/skill .claude/skills/graphitect   # Claude Code
+npx degit Naman6019/graphitect/graphitect/skill .agents/skills/graphitect   # Codex
+
+# Or via npm package runner:
+npx graphitect skill export --host claude-code   # (add --global for user-wide install)
+npx graphitect skill export --host codex
+```
+
+### Option 3: Direct single-line download (curl or PowerShell)
+
+```bash
+# macOS / Linux (Claude Code):
+mkdir -p .claude/skills/graphitect && curl -fsSL https://raw.githubusercontent.com/Naman6019/graphitect/main/graphitect/skill/SKILL.md -o .claude/skills/graphitect/SKILL.md
+
+# Windows PowerShell (Claude Code):
+New-Item -ItemType Directory -Force .claude\skills\graphitect; Invoke-WebRequest -Uri https://raw.githubusercontent.com/Naman6019/graphitect/main/graphitect/skill/SKILL.md -OutFile .claude\skills\graphitect\SKILL.md
+```
+
+### Option 4: From an installed `graphitect` CLI
+
+```bash
+# In the project you want to document:
+graphitect skill export --host claude-code  # or --host codex
+
+# Or install globally:
+graphitect skill export --host claude-code --global
+```
 
 ### Other Agent Skills-compatible hosts
 
-Export the portable bundle to the host's project-skill directory. Point
-`--output` at the directory that host discovers:
+Export the portable bundle to any directory that host discovers:
 
 ```bash
-cd /path/to/project
 graphitect skill export --output ./skills/graphitect
 # Writes SKILL.md and agents/openai.yaml.
 ```

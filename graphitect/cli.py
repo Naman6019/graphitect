@@ -39,7 +39,7 @@ Usage:
   graphitect agent prepare <path> [-o .graphitect-agent]
   graphitect agent compile <workspace> [--repo PATH] [--title TITLE] [--answers answers.json]
                            [--no-diagram] [-o report.html]
-  graphitect skill export [--host codex|claude-code] [--output SKILL_DIRECTORY] [--force]
+  graphitect skill export [--host codex|claude-code] [--global] [--output SKILL_DIRECTORY] [--force]
 
   graphitect --help
 """
@@ -56,12 +56,13 @@ def _skill_bundle() -> dict[str, str]:
 
 def _cmd_skill_export(args: argparse.Namespace) -> int:
     """Export the same portable skill to a host's discovery location."""
+    is_global = getattr(args, "global_scope", False)
     if args.output:
         destination = Path(args.output)
     elif args.host == "codex":
-        destination = Path.cwd() / ".agents" / "skills" / "graphitect"
+        destination = (Path.home() / ".agents" / "skills" / "graphitect") if is_global else (Path.cwd() / ".agents" / "skills" / "graphitect")
     elif args.host == "claude-code":
-        destination = Path.cwd() / ".claude" / "skills" / "graphitect"
+        destination = (Path.home() / ".claude" / "skills" / "graphitect") if is_global else (Path.cwd() / ".claude" / "skills" / "graphitect")
     else:
         print("error: --output is required when no host is selected", file=sys.stderr)
         return 2
@@ -960,6 +961,12 @@ def build_parser() -> argparse.ArgumentParser:
     p_skill_sub = p_skill.add_subparsers(dest="skill_command", required=True)
     p_skill_export = p_skill_sub.add_parser("export", help="write a Graphitect skill bundle")
     p_skill_export.add_argument("--host", choices=["codex", "claude-code"])
+    p_skill_export.add_argument(
+        "--global",
+        dest="global_scope",
+        action="store_true",
+        help="install globally into the user home directory (~/.claude or ~/.agents) instead of the current project",
+    )
     p_skill_export.add_argument(
         "--output",
         help="destination skill directory for another Agent Skills-compatible host",
